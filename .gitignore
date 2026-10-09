@@ -1,0 +1,22 @@
+# 本地内部件（不发布到仓库）
+docs/
+notes/
+
+# 依赖与产物
+node_modules/
+dist/
+build/
+out/
+
+# 日志与临时
+*.log
+*.tmp
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# 本地环境
+.env
+.env.*
+*.key
+*.pem

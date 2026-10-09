@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "note": "优化大师（hana-optimizer）· 内置默认规则（对齐《01 OH-WorkSpace 结构规范》）。每个工作区把它复制为 <root>/.optimize/rules.json；不带引擎，阈值由 Agent 现场比对。",
+  "mode": "full",
+  "rootWhitelist": ["projects", "storage", "inbox", "_temp", "个性化", ".server", "_tools", ".optimize", "OH-Works", "OH-媒体库", "魔术卡", "OH-Media Library", "Magic Cards", "OH-媒體庫", "OH-メディアライブラリ", "OH-미디어 라이브러리"],
+  "protectedPaths": ["projects", "storage", "个性化", ".server", "OH-Works", "OH-媒体库", "魔术卡", "OH-Media Library", "Magic Cards", "OH-媒體庫", "OH-メディアライブラリ", "OH-미디어 라이브러리"],
+  "rootStrayExempt": ["AGENTS.md", "README.md", ".gitignore"],
+  "skeleton": {
+    "sixCells": ["projects", "storage", "inbox", "_temp", "个性化", ".server"],
+    "storage": ["storage/docs", "storage/存底", "storage/tools"],
+    "temp": ["_temp/截图", "_temp/数据", "_temp/一次性", "_temp/导出", "_temp/jobs", "_temp/检查点", "_temp/反悔区"]
+  },
+  "externalRoots": {
+    "mode": "readonly",
+    "rediscover": "studio-mounts.json (status=active 且 capabilities 含 list+read+write)",
+    "note": "外部挂载根默认零写入：只读巡检 + 出方案 + notify；执行需用户另行授权（默认人执行）",
+    "redlines": ["world", "data", "logs", "*.db", ".git", ".env", "*.key", "*.pem", "secrets*", "归档大件"]
+  },
+  "tempLifecycle": {
+    "_temp/截图": 7,
+    "_temp/数据": 14,
+    "_temp/一次性": 7,
+    "_temp/导出": 30,
+    "_temp/jobs": 7
+  },
+  "inboxStaleDays": 14,
+  "debris": { "dir": "_temp/反悔区", "batchWindowDays": { "recommended": 14, "aggressive": 30 } },
+  "checkpointKeep": 10,
+  "backupKeep": 7,
+  "logKeepDays": 3,
+  "oversizedMB": 50,
+  "classify": { "png": "inbox", "jpg": "inbox", "jpeg": "inbox", "webp": "inbox" },
+  "guard": { "maxItems": 30, "maxBytes": 209715200, "maxTops": 2, "planTtlMinutes": 15 }
+}
