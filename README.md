@@ -1,5 +1,7 @@
 # hana-optimizer · 优化大师
 
+![hana-optimizer 概览](assets/overview.svg)
+
 > 一个面向 HanaAgent 的**工作区治理** skill：把「整理与清理」变成一套可重复执行的规矩，而不是每次拍脑袋。
 
 ## 它做什么
