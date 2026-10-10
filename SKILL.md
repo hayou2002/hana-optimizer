@@ -11,9 +11,16 @@ description: "优化大师（hana-optimizer）：把「工作区治理规范集�
 
 - **我（脑 ＋ 手）**：扫描、分类、出方案、执行、验证。
 - **人（拍板）**：所有"需确认"的清理，以及本体红门、外部跨根的最终执行。
-- **规则三来源（优先级从高到低）**：① `<工作区>/.optimize/rules.json`（机器可读阈值/白名单/保护区）＞ ② 本 skill **内置** `references/rules/`（自包含、装即用的规范快照）＞ ③ 权威源副本（`projects/hana-optimizer/docs/`）。
+- **规则三来源（优先级从高到低）**：① `<工作区>/.optimize/rules.json`（机器可读阈值/白名单/保护区）＞ ② 本 skill **内置** `references/rules/`（自包含、装即用的规范快照）＞ ③ 项目维护者的权威源副本（hana-optimizer 仓库 `docs/`，不随安装包分发）。
 
 **统一护栏（谁都绕不过）**：`扫描 → 分类 → 出三档方案 → 人确认 → 执行 → 验证`。删除一律先软删（进反悔区）或备份。
+
+**环境对位（读前必知）**：本套文档写自一个具体实例；文中的目录名（如出厂默认名 `OH-WorkSpace`）、任务时刻、统计数字与历史事件，都是**那个实例的现场痕迹，不是你的现场**。你的实例可能结构不同、没建过 `.optimize/rules.json`、任务与记忆体量各异——**对不上是常态**。执行任何动作前，先做一轮对位：
+
+1. **探测现场**：实际查看工作台根结构、`rules.json` 是否存在、挂载表（`studio-mounts.json`）与 `agents/{id}` 的真实现状；
+2. **对照假设**：与本文档的「推荐结构 / 目标态」比对，列出差异清单；
+3. **落差处理**：目标结构缺失 → 先走「01 初始化」补齐，或在方案中声明以现场为准；现场是另一套成熟结构 → 不为它动刀，把本 skill 的方法对位到现场实际目录执行；判不准 → 停下来问用户；
+4. **不信纸面**：文档中的任何具体数字、任务名、历史事件，都不作为现场事实去核对或执行。
 
 ---
 
@@ -21,7 +28,7 @@ description: "优化大师（hana-optimizer）：把「工作区治理规范集�
 
 | # | 板块 | 根 | 怎么扫 | 执行通道 | 红线 |
 |---|---|---|---|---|---|
-| 1 | **工作区** | 主工作台 `OH-WorkSpace`（= `desk.home_folder`） | 我现场盘点根 + 六格 + `_temp` 时钟 | 我用 `exec_command` 搬进 `_temp/反悔区/{批次}/`（只搬不删） | 保护区（projects/storage/个性化/.server/平台常驻户）只由 FULL 域动 |
+| 1 | **工作区** | 主工作台（= `desk.home_folder`；出厂默认名 `OH-WorkSpace`，以你的实际值为准） | 我现场盘点根 + 六格 + `_temp` 时钟 | 我用 `exec_command` 搬进 `_temp/反悔区/{批次}/`（只搬不删） | 保护区（projects/storage/个性化/.server/平台常驻户）只由 FULL 域动 |
 | 2 | **专项工作文件夹** | 工作台外挂载根（`<外部根>` 等）；**开工动态读挂载表** | 我按各根入口件/产物格/运行态/临时件盘点；**每日随治理任务只读巡检**＋季度深度盘点 | **默认人执行**；经许可由我用 `exec_command`（FULL 域）按方案清 | 运行态（`world`/`data`/`*.db`）、唯一存底不删；默认只清"可再生" |
 | 3 | **拓展 · 本体** | `~/.hanako`（apps / skills / recipes / extensions ＋自管目录） | 我读四分区 + 自管体量 + 孤儿 `app-data` | `extension_manager`（卸载/更新）＋ 黄门项清（人/许可脚本） | **红门绝不碰**；绿门平台自清 |
 | 4 | **经验 · 记忆** | `~/.hanako/agents/{id}/`（记忆 / 置顶 / 经验库） | 我读 pinned / experience / memory 计数与体量 | 平台记忆工具 ＋ 文件面（`pinned.md` / `experience/*.md`） | 派生不手改；`facts.db` 的 `-wal/-shm` 不动；取代 ≠ 删除 |
@@ -106,7 +113,7 @@ description: "优化大师（hana-optimizer）：把「工作区治理规范集�
    ```
 3. **落规则**：把 skill 内置的 `engine/rules.default.json` 复制为 `<工作区>/.optimize/rules.json`（已存在则不覆盖）。
 4. **注入纪律**：在根 `AGENTS.md` 注入 `<!-- optimize-master:begin --> … <!-- optimize-master:end -->` 标记块（内容见 §八「落盘纪律」）；已存在则原位替换，不存在则新建。
-5. **收规范**（可选）：把权威源（`projects/hana-optimizer/docs/`）的**规范文档**复制进 `storage/docs/`（不覆盖已有，不搬评审记录等草稿）。
+5. **收规范**（可选）：把本 skill 的规范文档（`references/rules/`）复制进 `storage/docs/`（不覆盖已有）——让工作区自持一份，便于离线查阅。
 6. **报告**：一句话说清建了哪些目录、规则落在哪、纪律注入了没、收了哪些规范。**本地可逆动作，直接做，不等确认。**
 7. **创建定时任务**（可选，**必须让用户确认**）：用 `automation` 建“每日治理巡检”（多根版）；**无同名→`create`，已有→`update`（附 id）；同一任务同一轮只提一次**（防建议互相顶替）。prompt 自包含（第〇步核对 cwd + 动态读挂载表、绝对路径、主工作台 safe 档、外部根只读、本体只报告、检查点三表）。模板见 `references/自动任务模板.md`。`create`/`update` 只产待确认建议，用户点确认或回 `/apply [短码]` 才落库；**“确认”二字无效**。
 8. **校验**：现场 `ls` 根，确认六格到位；把 `rules.json` 读回核对。
@@ -204,7 +211,7 @@ description: "优化大师（hana-optimizer）：把「工作区治理规范集�
 $root='<工作区>'
 Get-ChildItem -LiteralPath $root -Force | Select-Object Name,LastWriteTime,Length
 ```
-白名单＝`projects/storage/inbox/_temp/个性化/.server/_tools/.optimize`（＋平台常驻户、`AGENTS.md` 等豁免）；白名单外的顶层项＝散件。
+白名单＝`projects/storage/inbox/_temp/个性化/.server/.optimize`（＋平台常驻户、`AGENTS.md` 等豁免；现场若留有历史目录如 `_tools`，按其既有状态只读处理）；白名单外的顶层项＝散件。
 
 **算 `_temp` 超龄**（天数取自 `rules.json.tempLifecycle`）
 ```powershell
@@ -263,7 +270,7 @@ Add-Content -LiteralPath (Join-Path $bin '.manifest.jsonl') -Encoding UTF8 `
 ## 一、工作区落盘
 - Q0 撞平台保留名（OH-Works / OH-媒体库 / 魔术卡）→ 就地不动。
 - Q1 本地工作台的项目 → projects/{名}/；Q2 运维/产品线 → <外部根>；Q3 有寿命临时件 → _temp/{时钟子目录}/；Q4 说不清 → inbox/。
-- 顶层白名单：projects / storage / inbox / _temp / 个性化 / .server / _tools / .optimize（＋平台常驻户）。白名单外落笔视为违规。
+- 顶层白名单：projects / storage / inbox / _temp / 个性化 / .server / .optimize（＋平台常驻户；历史遗留目录按既有状态只读处理）。白名单外落笔视为违规。
 ## 二、交付铁律
 - 只报路径不算交付：成果进会话走 stage_files；中间物落 _temp/jobs/{当日}-{会话 slug}/。
 - 生成新文件时同轮声明走的是第几问。
@@ -277,7 +284,7 @@ Add-Content -LiteralPath (Join-Path $bin '.manifest.jsonl') -Encoding UTF8 `
 
 ## 九、references 索引
 
-**本 skill 自包含且无引擎**：装好即能用——`references/rules/` 内置完整规范（README + 01~08），`engine/rules.default.json` 内置默认规则。**规范来自 doctor 引擎时代，其中的 `doctor_*` 全是历史写法，本 skill 无引擎、一律换算为现场命令**（对照表见 `references/rules/README.md` 顶部「去引擎说明」）。权威源副本（`projects/hana-optimizer/docs/`）只作更新来源，不装也能跑。
+**本 skill 自包含且无引擎**：装好即能用——`references/rules/` 内置完整规范（README + 01~08），`engine/rules.default.json` 内置默认规则。**规范来自 doctor 引擎时代，其中的 `doctor_*` 全是历史写法，本 skill 无引擎、一律换算为现场命令**（对照表见 `references/rules/README.md` 顶部「去引擎说明」）。项目维护者的权威源副本（仓库 `docs/`）只作更新来源，不装也能跑。
 
 按需读取，不要一次性全 load：
 
@@ -286,9 +293,9 @@ Add-Content -LiteralPath (Join-Path $bin '.manifest.jsonl') -Encoding UTF8 `
 - `references/自动任务模板.md`——01 初始化里创建定时任务用的 prompt 模板。
 - `references/通道与工具.md`——四板块的执行通道、记忆工具、`automation`、`extension_manager` 用法要点。
 - `engine/rules.default.json`——**内置默认规则表**（init 时复制为 `<工作区>/.optimize/rules.json`）。
-- 待落地草稿（已归档 `_drafts/`）：`_drafts/待办总表.md`、`_drafts/AGENTS.md（待落地）.md`、`_drafts/cron prompt修订草案（待落地）.md`、`_drafts/rules.json收编方案（待落地）.md`。
+- （项目开发仓库内另有 `_drafts/` 待落地稿，不随发布包分发——发布包里没有属正常。）
 
-**快照与权威源同步（机制）**：内置 `references/rules/` 是"装即用"的底线；权威源（`projects/hana-optimizer/docs/`）更新后，用 `diff`/`grep` 比对两处同名文件，不一致就同步内置副本——**权威源是源，内置是镜像**，改动同批；镜像永不反向覆盖源。
+**快照与权威源同步（项目维护者事项）**：内置 `references/rules/` 是"装即用"的底线；开发仓库的 `docs/` 更新后，用 `diff`/`grep` 比对两处同名文件，不一致就同步内置副本——**仓库 docs 是源，内置是镜像**，改动同批；镜像永不反向覆盖源。普通使用者无需关心此段。
 
 > 规则与现场实测冲突时**以实测为准**；改规则要同批改 `<工作区>/.optimize/rules.json` 与内置规则文档。
 
@@ -299,7 +306,8 @@ Add-Content -LiteralPath (Join-Path $bin '.manifest.jsonl') -Encoding UTF8 `
 | 日期 | 变更 |
 |---|---|
 | 2026-09-08 | 初版：优化大师（带引擎 App + skill 双形态） |
-| 2026-09-27 | 工作区整库重置：新骨架（六格 + `storage/docs` + `inbox`） |
+| 2026-09-27 | 骨架规范更新：定为六格 + `storage/docs` + `inbox` |
 | 2026-10-09 19:31 | **去引擎**：删 `engine/cli.mjs`，SKILL.md 重写为纯 Agent 工作流 |
 | 2026-10-09 21:15 | **多根化**：自动任务模板改为“动态读挂载表 + 按使用情况分级 + 外部根只读巡检”；白名单补 `_tools`/`.optimize` |
-| 2026-10-09 22:00 | **删 App + 全量去引擎**：卸载 `app:hana-optimizer`、删 `app-data`；`references/rules` 01~08 全文清洗 `doctor_*` → 现场命令；4 份待落地稿归档 `_drafts/` |
+| 2026-10-09 22:00 | **删 App + 全量去引擎**：移除引擎附属 App 与数据；`references/rules` 01~08 全文清洗 `doctor_*` → 现场命令；4 份待落地稿移入 `_drafts/` |
+| 2026-10-10 | **通用化改造**：清除/示例化实例环境痕迹；新增「环境对位」机制；修复悬空引用；默认白名单移除历史遗留项 `_tools` |

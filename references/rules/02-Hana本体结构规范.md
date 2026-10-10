@@ -2,9 +2,9 @@
 
 > ⚠️ **无引擎提示**：本文历史 `doctor_*` 记法来自 doctor 引擎时代，本 skill 已无引擎、该 App 已不存在——等价现场做法见 `README.md` 顶部「去引擎说明」。
 
-> **版本** v0.3（与 04 对齐：AI 出方案、人执行）｜ **更新** 2026-10-09 10:25 ｜ **状态** 调研已并入，未核实项见 §10
-> **上游权威**：平台内核 bundle 的存储登记表（`defineStore`）｜ 本机只读调研（2026-10-08）｜ 官方公开资料
-> **评审记录**：`02-优化评审记录.md` ｜ **关联文档**：README（总纲）｜ 01（工作区）｜ 04（清理）｜ 05（整理）
+> **版本** v0.4（通用化改造）｜ **更新** 2026-10-10 ｜ **状态** 未核实项见 §10
+> **上游权威**：平台内核 bundle 的存储登记表（`defineStore`）｜ 现场只读调研 ｜ 官方公开资料
+> **关联文档**：README（总纲）｜ 01（工作区）｜ 04（清理）｜ 05（整理）
 > **本文件使命**：**让用户敢清、清得对 `~/.hanako`**（Hana 软件自己的家）
 
 ---
@@ -86,7 +86,7 @@
 
 | 类别 | 成员 | 删了会怎样 |
 |---|---|---|
-| 凭据与安全 | `auth.json`、`provider-catalog.json`、`users.json`、`device-credentials.json`、`*-sessions.json`、`security/` | 登录/授权/密钥链断；部分是本机密钥密封态，换机不可读 |
+| 凭据与安全 | `auth.json`、`provider-catalog.json`、`users.json`、`device-credentials.json`、`*-sessions.json`、`security/` | 登录/授权/密钥链断；部分为机器密钥密封态，换机不可读 |
 | 核心索引 | `session-manifest.db(+wal/shm)`、`data-epoch.json`、`workspace-state/`、`usage-ledger.sqlite` | 会话身份/纪元门禁/资源身份断链；平台恢复路径是"改名 aside 重建"而非删 |
 | 内核与更新 | `artifacts/` **整体**（除 `staging`）、`provider-plugins/` | 被指针引用的版本目录一删，通道无法激活/回滚（`activation.cjs` 遇不可解析指针**故意抛错**） |
 | Agent 与记忆 | `agents/{id}/` 正文、`memory/`、`session jsonl` | 对话永久丢失、记忆清零 |
@@ -141,7 +141,7 @@ app-data/{id} 且 id ∉ 台账 app 集（extensions/installs.json）
 
 ## 8 安全与凭据边界
 
-- `user/preferences.json` 存有第三方搜索密钥**明文**；`migration-backups/` 与 `extensions/staging/*/connector.secret.json` 可能含同等凭据（部分为本机密钥密封态）。
+- `user/preferences.json` 存有第三方搜索密钥**明文**；`migration-backups/` 与 `extensions/staging/*/connector.secret.json` 可能含同等凭据（部分为机器密钥密封态）。
 - 因此：**不要把 `.hanako` 打包上传求助**。真要发日志，只发 `logs/*.log` 与 `diagnostics/`。
 - 凭据家族的字节数**不参与任何清理讨论**。
 
@@ -163,8 +163,8 @@ app-data/{id} 且 id ∉ 台账 app 集（extensions/installs.json）
 
 ## 10 待优化与未核实
 
-- **空间体量为定性**：除顶层实测（见 01 记录），各目录的"占用倾向"是按增长机制推的，未逐项实测字节数。要写"清这里能省多少 G"，需补一轮带 shell 的测量。
-- **`artifacts` GC 的保留份数**（保留 current+previous？宽限期几天？）在桌面壳包里，本机可读范围未读到。
+- **空间体量为定性**：各目录的"占用倾向"是按增长机制推的，未逐项实测字节数。要写"清这里能省多少 G"，需现场补一轮带 shell 的测量。
+- **`artifacts` GC 的保留份数**（保留 current+previous？宽限期几天？）在桌面壳包里，可读范围未读到。
 - **`plugins/`（v1）卸载通道**未验证。
 - **`trash/` 的 TTL**：机制存在，未找到清扫代码。
 - 顶层计数不写死，改用脚本复测口径。

@@ -1,8 +1,8 @@
 # 06 · HANA 经验与记忆的结构规范
 
-> **版本** v0.1（知识法域上户口）｜ **建档** 2026-10-09 ｜ **状态** 调研已并入，未核实项见 §9
-> **上游权威**：HanaAgent 内核 bundle（记忆流水线）｜ `agents/hanako/` 现场文件 ｜ 现场只读调研
-> **关联**：README（总纲）｜ 02（Hana 本体）｜ 04（清理）｜ **07 整理（待建）**
+> **版本** v0.2（通用化改造）｜ **建档** 2026-10-09 ｜ **更新** 2026-10-10 ｜ **状态** 未核实项见 §9
+> **上游权威**：HanaAgent 内核 bundle（记忆流水线）｜ `agents/{id}/` 现场文件
+> **关联**：README（总纲）｜ 02（Hana 本体）｜ 04（清理）｜ **07 整理**
 > **本文件使命**：给「知识法域」上户口，讲清 **记忆与经验住在哪、怎么运转、什么算数**
 
 ---
@@ -44,7 +44,7 @@
 | **置顶（人读镜像）** | `pinned.md`（agent 根） | 同上 | `- 内容`（续行缩进） | 永久 | **人工整理的首选入口**（md 新于 json → 以 md 为准重建） |
 | 经验正文 | `experience/{slug}-{sha10}.md` | `record_experience` | 首行 `<!-- experience-title: base64 -->` + 编号条目 | 永久，无自动清理 | **无删除/编辑 API**，只能改文件 |
 | 经验索引 | `experience.md`（agent 根） | `record` 时刷新 | `# 分类（N 条）` + 摘要行 + 链接 | **派生** | 手改后索引不立刻更新 |
-| `book/`、`heartbeat/` | agent 根 | **无人写** | — | 平台补骨架 | 空壳遗留 |
+| `book/`、`heartbeat/` | agent 根 | **无人写** | — | 平台补骨架 | 通常为空 |
 
 > **逻辑日 04:00 切换**（跨日后 `today.md` 清空、账本重置）。整理规范的"昨天/本周"要和平台口径一致，**不用自然日**。
 
@@ -85,7 +85,7 @@
 
 ## 4 注入与预算（谁进 prompt、多少）
 
-- **进 prompt 的只有两样，且是全文**：`memory.md`（≈918 字）+ `pinned.md`（**≈8600 字符**），落在 prompt `order 9000` 的 memory 段（scope `self`），前置一段「记忆使用规则」。
+- **进 prompt 的只有两样，且是全文**：`memory.md` ＋ `pinned.md`（pinned 无上限），落在 prompt `order 9000` 的 memory 段（scope `self`），前置一段「记忆使用规则」。
 - **经验库不进 prompt**——只能靠 `recall_experience` 工具取（别搞混）。
 - 三条闸门：`memory.enabled=false` → 整段不注入；`forSubagent` → 不注入（**子代理没有记忆段，也没有四个记忆工具**）；`tool_call_mode=minimal` → 只注入 `facts`+`today`。
 
@@ -154,10 +154,10 @@
 
 - **`config.yaml` 死键**：文档/设置页若仍展示"衰减系数"等，属误导——建议标注。
 - **`deepMemory` vs Dream** 两个状态机的关系待核。
-- **`summaries/`、`daily/` 是否有平台 TTL**：未见清理代码。
-- **embedding 空**（`embedding_api.provider=""`）：语义检索大概率退化为关键词档。
+- **`summaries/`、`daily/` 是否有平台 TTL**：未见平台清理机制。
+- **embedding 未配置**（`embedding_api.provider` 为空）：语义检索会退化为关键词档（先查你的实例配置）。
 - `experience.md` 索引与正文一致性、`pinned` json↔md 双源一致性——**无校验**。
-- `book/`、`heartbeat/` 空壳遗留，应按可清理遗留处理。
+- `book/`、`heartbeat/` 通常为空，可按可清理遗留处理。
 
 ---
 
@@ -165,5 +165,5 @@
 
 **三个物**：`memory/`（编译式，分四段）｜`pinned-memory.json`（置顶，全文常驻）｜`experience/`（经验库，不进 prompt）。
 **两个只进不出**：`facts.db`、`experience/`。
-**一个 token 压力点**：`pinned.md`（≈8600 字符，人工负责）。
+**一个 token 压力点**：`pinned.md`（无上限、人工负责）。
 **一条铁线**：改派生没用（`memory.md`/`week.md`/`experience.md`），改真源才算数。

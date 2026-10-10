@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "note": "优化大师（hana-optimizer）· 内置默认规则（对齐《01 OH-WorkSpace 结构规范》）。每个工作区把它复制为 <root>/.optimize/rules.json；不带引擎，阈值由 Agent 现场比对。",
+  "note": "优化大师（hana-optimizer）· 内置默认规则（对齐《01 OH-WorkSpace 结构规范》）。每个工作区把它复制为 <root>/.optimize/rules.json；不带引擎，阈值由 Agent 现场比对；如现场结构与假设不同，先按 SKILL.md「环境对位」处理。",
   "mode": "full",
-  "rootWhitelist": ["projects", "storage", "inbox", "_temp", "个性化", ".server", "_tools", ".optimize", "OH-Works", "OH-媒体库", "魔术卡", "OH-Media Library", "Magic Cards", "OH-媒體庫", "OH-メディアライブラリ", "OH-미디어 라이브러리"],
+  "rootWhitelist": ["projects", "storage", "inbox", "_temp", "个性化", ".server", ".optimize", "OH-Works", "OH-媒体库", "魔术卡", "OH-Media Library", "Magic Cards", "OH-媒體庫", "OH-メディアライブラリ", "OH-미디어 라이브러리"],
   "protectedPaths": ["projects", "storage", "个性化", ".server", "OH-Works", "OH-媒体库", "魔术卡", "OH-Media Library", "Magic Cards", "OH-媒體庫", "OH-メディアライブラリ", "OH-미디어 라이브러리"],
   "rootStrayExempt": ["AGENTS.md", "README.md", ".gitignore"],
   "skeleton": {
